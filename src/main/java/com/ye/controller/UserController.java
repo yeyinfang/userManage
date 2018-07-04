@@ -67,4 +67,22 @@ public class UserController {
 
         return userService.all(page,size);
     }
+    //用户绑定角色
+    @RequestMapping(value = "/add_role",method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult AddRoles(Integer id,String roleIds){
+        return userService.addRoles(id,roleIds);
+    }
+
+
+
+    //用户查询角色
+    @RequestMapping(value = "/roles",method = RequestMethod.GET)
+    @ResponseBody
+    public Map roles(Integer id,
+                     @RequestParam(required = false,defaultValue = "1")Integer page,
+                     @RequestParam(required = false,defaultValue = "10")Integer size ){
+        return userService.roles(id,page,size);
+
+    }
 }

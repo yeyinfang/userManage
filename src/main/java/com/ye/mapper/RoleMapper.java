@@ -70,5 +70,34 @@ public interface RoleMapper {
     * @Author: Yin 
     * @Date: 2018/7/4 
     */ 
-    int addPerm(@Param("id") Integer id, @Param("permIds") String[] permIds);
+    int addPerm(@Param("roleId") Integer roleId, @Param("permIds") String[] permIds);
+
+
+
+    /** 
+    * @Description: 所有的权限都删除
+    * @Param: [id] 
+    * @return: void 
+    * @Author: Yin 
+    * @Date: 2018/7/4 
+    */ 
+    void deletePerm(Integer id);
+
+    /** 
+    * @Description: 查找自己的权限
+    * @Param: [id] 
+    * @return: java.util.List<com.ye.pojo.Role> 
+    * @Author: Yin 
+    * @Date: 2018/7/4 
+    */ 
+    List<Role> findPerm(Integer id);
+
+    /** 
+    * @Description: 查找到角色的shuju
+    * @Param: [id] 
+    * @return: java.util.List<com.ye.pojo.Role> 
+    * @Author: Yin 
+    * @Date: 2018/7/4 
+    */ 
+    List<Role> findRole(Integer id);
 }

@@ -10,6 +10,10 @@
         <result property="delFlag" column="del_flag"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+        <collection property="permissionList" ofType="com.ye.pojo.Permission">
+            <id property="id" column="id"/>
+            <result property="permName" column="perm_name"/>
+        </collection>
     </resultMap>
     <!--根据名字找到角色-->
     <select id="findRoleByName" parameterType="string" resultMap="roleMap">
@@ -40,10 +44,31 @@
 
     <!--绑定权限-->
     <insert id="addPerm" parameterType="map">
-        INSERT  into sys_rold_perm(role_id,perm_id) 
-        <foreach collection="permId" item="permId" open="values" separator=",">
-            (#(id)，#{permId})
+        insert  into sys_role_perm(role_id,perm_id)
+        <foreach collection="permIds" item="permId" open="values " separator=",">
+            (#{roleId},#{permId})
         </foreach>
-
     </insert>
+
+    <!--deletePerm 删除-->
+    <delete id="deletePerm" parameterType="int">
+        DELETE from sys_role_perm where role_id=#{id}
+    </delete>
+
+    <!--查找自己的权限-->
+    <select id="findPerm" parameterType="int" resultMap="roleMap">
+      select r.id,
+      r.role_name,
+      r.del_flag,
+      p.id 'permId',
+      p.perm_name from sys_role r
+      LEFT JOIN  sys_role_perm rp on r.id=rp.role_id
+      LEFT JOIN sys_permission p ON rp.perm_id = p.id
+      where r.id=#{id} and r.del_flag!=0
+    </select>
+
+    <!--查找到角色-->
+    <select id="findRole" parameterType="int" resultMap="roleMap">
+        SELECT r.* from sys_user_role ur,sys_role r where r.id = ur.role_id and ur.user_id=#{id}
+    </select>
 </mapper>

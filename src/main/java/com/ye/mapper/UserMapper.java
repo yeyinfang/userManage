@@ -1,6 +1,7 @@
 package com.ye.mapper;
 
 import com.ye.pojo.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,4 +60,22 @@ public interface UserMapper {
     * @Date: 2018/7/3 
     */ 
     List<User> findAll();
+
+    /** 
+    * @Description: 删除所有的角色根据id
+    * @Param: [id] 
+    * @return: void 
+    * @Author: Yin 
+    * @Date: 2018/7/4 
+    */ 
+    void deleteRole(Integer id);
+
+    /** 
+    * @Description: 添加用户的角色
+    * @Param: [id, ids] 
+    * @return: int 
+    * @Author: Yin 
+    * @Date: 2018/7/4 
+    */ 
+    int addRoles(@Param("id") Integer id,@Param("ids") String[] ids);
 }

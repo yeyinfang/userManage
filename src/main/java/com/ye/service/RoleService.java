@@ -20,4 +20,7 @@ public interface RoleService {
 
     //绑定权限
     ResponseResult addPerms(Integer id, String perm_ids);
+
+    //查找所拥有的权限
+    Map find_perm(Integer id, Integer page, Integer size);
 }

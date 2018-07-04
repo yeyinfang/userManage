@@ -59,4 +59,12 @@ public class RoleController {
     public ResponseResult addPerms(Integer id ,String perm_ids){
         return roleService.addPerms(id,perm_ids);
     }
+
+    //根绝角色id查找到自己所拥有的权限
+    @RequestMapping(value = "find_perm",method = RequestMethod.POST)
+    @ResponseBody
+    public Map find_perm(Integer id,@RequestParam(required = false,defaultValue = "1") Integer page,
+                        @RequestParam(required = false,defaultValue = "10")Integer size){
+        return roleService.find_perm(id,page,size);
+    }
 }

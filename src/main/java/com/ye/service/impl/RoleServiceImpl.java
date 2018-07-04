@@ -3,7 +3,9 @@ package com.ye.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ye.common.ResponseResult;
+import com.ye.mapper.PermissionMapper;
 import com.ye.mapper.RoleMapper;
+import com.ye.pojo.Permission;
 import com.ye.pojo.Role;
 import com.ye.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private PermissionMapper permissionMapper;
 
     @Override
     public ResponseResult addRole(Role role) {
@@ -91,6 +95,8 @@ public class RoleServiceImpl implements RoleService {
         if(dbRole==null){
             return ResponseResult.error("角色不存在！");
         }
+        //将所有的权限都删除
+        roleMapper.deletePerm(id);
         //切割id
         String[] permIds = perm_ids.split(",");
 
@@ -101,6 +107,18 @@ public class RoleServiceImpl implements RoleService {
         }else{
             return ResponseResult.error("绑定权限失败");
         }
+    }
 
+    @Override
+    public Map find_perm(Integer id,Integer page, Integer size) {
+        PageHelper.startPage(page,size);
+        List<Permission> permissionList = permissionMapper.finPerm(id);
+        PageInfo<Permission> info = new PageInfo<>(permissionList);
+        long total = info.getTotal();
+        List<Permission> list = info.getList();
+        Map<String,Object> map = new HashMap<>();
+        map.put("total",total);
+        map.put("rows",list);
+        return map;
     }
 }

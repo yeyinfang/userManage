@@ -20,4 +20,10 @@ public interface UserService {
 
     //查询到所有的用户
     Map all(Integer page, Integer size);
+
+    //查询到用户的所有角色
+    Map roles(Integer id, Integer page, Integer size);
+
+    //用户绑定角色
+    ResponseResult addRoles(Integer id, String roleIds);
 }

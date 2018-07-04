@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.org.apache.regexp.internal.RE;
 import com.ye.common.ResponseResult;
+import com.ye.mapper.RoleMapper;
 import com.ye.mapper.UserMapper;
+import com.ye.pojo.Role;
 import com.ye.pojo.User;
 import com.ye.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
     @Override
     public ResponseResult add(User user) {
         //先到数据库进行查找看是否存在
@@ -99,5 +103,36 @@ public class UserServiceImpl implements UserService {
         map.put("total",total);
         map.put("rows",list);
         return map;
+    }
+
+    @Override
+    public Map roles(Integer id, Integer page, Integer size) {
+        PageHelper.startPage(page,size);
+        List<Role> roleList = roleMapper.findRole(id);
+        PageInfo<Role> info = new PageInfo<>(roleList);
+        List<Role> list = info.getList();
+        long total = info.getTotal();
+        Map<String,Object> map = new HashMap<>();
+        map.put("total",total);
+        map.put("rows",list);
+        return map;
+    }
+
+    @Override
+    public ResponseResult addRoles(Integer id, String roleIds) {
+        User user = userMapper.findUserById(id);
+        if(user==null){
+            return ResponseResult.error("用户不存在!");
+        }
+        //首先就是删除所有的
+        userMapper.deleteRole(id);
+        String[] ids = roleIds.split(",");
+
+        int count = userMapper.addRoles(id, ids);
+        if(count==ids.length){
+            return ResponseResult.success("绑定成功");
+        }else{
+            return ResponseResult.error("绑定失败");
+        }
     }
 }

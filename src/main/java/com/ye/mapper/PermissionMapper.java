@@ -64,4 +64,13 @@ public interface PermissionMapper {
     * @Date: 2018/7/4 
     */ 
     List<Permission> findAll();
+
+    /** 
+    * @Description: 查找用户
+    * @Param: [id] 
+    * @return: java.util.List<com.ye.pojo.Permission> 
+    * @Author: Yin 
+    * @Date: 2018/7/4 
+    */ 
+    List<Permission> finPerm(Integer id);
 }
