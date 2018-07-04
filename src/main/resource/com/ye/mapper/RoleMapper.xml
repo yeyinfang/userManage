@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ye.mapper.RoleMapper">
+
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <!--根据名字找到角色-->
+    <select id="findRoleByName" parameterType="string" resultMap="roleMap">
+      SELECT * from sys_role  WHERE  role_name=#{roleName}
+    </select>
+    <!--根据id查找到角色-->
+    <select id="findRoleById" parameterType="int" resultMap="roleMap">
+        SELECT  * from sys_role where id=#{id} and del_flag != 0
+    </select>
+    <!--查找所有的-->
+    <select id="findAll" resultMap="roleMap">
+        SELECT * from sys_role WHERE del_flag !=0
+    </select>
+
+    <!--增加角色-->
+    <insert id="addRole" parameterType="role" useGeneratedKeys="true" keyProperty="id">
+        INSERT into sys_role(role_name,del_flag,create_time,update_time)
+        VALUES (#{roleName},1,now(),now())
+    </insert>
+    <!--删除角色-->
+    <update id="deleteRole" parameterType="int">
+        UPDATE sys_role SET del_flag=0 where id=#{id}
+    </update>
+    <!--修改角色-->
+    <update id="updateRole" parameterType="role">
+        UPDATE sys_role SET role_name=#{roleName},update_time=now() where id=#{id} and del_flag !=0
+    </update>
+
+    <!--绑定权限-->
+    <insert id="addPerm" parameterType="map">
+        INSERT  into sys_rold_perm(role_id,perm_id) 
+        <foreach collection="permId" item="permId" open="values" separator=",">
+            (#(id)，#{permId})
+        </foreach>
+
+    </insert>
+</mapper>

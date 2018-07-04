@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ye.mapper.PermissionMapper">
+
+    <resultMap id="permMap" type="permission">
+        <id property="id" column="id"/>
+        <result property="permName" column="perm_name"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <!--根据名字查找权限-->
+    <select id="findPermByName" parameterType="string" resultMap="permMap">
+        select * from sys_permission where perm_name = #{permName} and del_flag !=0
+    </select>
+    <!--根据id查找到权限-->
+    <select id="findPermById" parameterType="int" resultMap="permMap">
+        select * from sys_permission where id=#{id} and del_flag !=0
+    </select>
+    <!--查找所有的-->
+    <select id="findAll" resultMap="permMap">
+        SELECT  * from sys_permission where del_flag !=0
+    </select>
+
+    <!--添加权限-->
+    <insert id="addPerm" parameterType="permission" useGeneratedKeys="true" keyProperty="id">
+        INSERT into sys_permission(perm_name,del_flag,create_time,update_time)
+        VALUES (#{permName},1,now(),now())
+    </insert>
+    <!--删除权限-->
+    <update id="deletePerm" parameterType="int">
+        UPDATE sys_permission SET del_flag=0 where id=#{id}
+    </update>
+    <!--修改-->
+    <update id="updatePerm" parameterType="permission">
+        UPDATE sys_permission SET perm_name=#{permName},update_time=now() where id=#{id} AND del_flag !=0
+    </update>
+</mapper>
